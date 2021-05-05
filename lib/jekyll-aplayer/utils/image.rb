@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Jekyll::Aplayer
-  class Util
+module Jekyll::Aplayer::Util
+  class Image
 
     def self.fetch_img_data(url)
       begin

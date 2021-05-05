@@ -33,7 +33,10 @@ module Jekyll::Aplayer
     @@_site_config = {}
     @@_store_config = {}
 
-    def self.normalize?(config)
+    def self.normalize?(config, processor)
+      # Call hook.
+      config = processor.send('on_config_normalize', config) if processor.respond_to?('on_config_normalize')
+      # Remove useless keys.
       cpy = config.without?('processor', 'assets', 'id', 'class', 'container', 'customAudioType')
       # Convert string to real datatype.
       cpy.map { |key, value|

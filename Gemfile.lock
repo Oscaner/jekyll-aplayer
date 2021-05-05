@@ -1,8 +1,9 @@
 PATH
   remote: .
   specs:
-    jekyll-aplayer (0.3.0)
+    jekyll-aplayer (0.4.0)
       deep_merge (~> 1.2, >= 1.2.1)
+      execjs (~> 2.7)
       jekyll (>= 3.0, < 5.0)
       json-next (~> 1.2, >= 1.2.1)
       rainbow (~> 3.0)
@@ -22,6 +23,7 @@ GEM
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
     eventmachine (1.2.7)
+    execjs (2.7.0)
     ffi (1.15.0)
     forwardable-extended (2.6.0)
     http_parser.rb (0.6.0)

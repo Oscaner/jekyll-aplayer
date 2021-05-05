@@ -4,9 +4,10 @@ require 'deep_merge'
 require 'securerandom'
 require 'nokogiri'
 require 'json/next'
+require 'jekyll-aplayer/common'
 
 module Jekyll::Aplayer
-  class Processor
+  class Processor < Jekyll::Aplayer::Common
 
     DEFAULT_PRIORITY = 20
 
@@ -30,22 +31,6 @@ module Jekyll::Aplayer
     attr_reader :registers
     attr_reader :exclusions
     attr_accessor :handled
-
-    def name
-      self.class.class_name
-    end
-
-    def self.class_name
-      self.name.split('::').last
-    end
-
-    def filename
-      self.name
-        .gsub(/([A-Z]+)([A-Z][a-z])/,'\1-\2')
-        .gsub(/([a-z\d])([A-Z])/,'\1-\2')
-        .tr("_", "-")
-        .downcase
-    end
 
     def self.config
       {}
@@ -273,9 +258,12 @@ module Jekyll::Aplayer
         # Store each aplayers' config.
         Config.store(elem['id'], config)
 
+        # Skip if the processor not match.
+        next unless config['processor'].strip == self.name.downcase
+
         # Generate aplayer instance.
         body.add_child(
-          Generator.generate_aplayer_instance(elem['id'], Config.normalize?(config))
+          Generator.generate_aplayer_instance(elem['id'], Config.normalize?(config, self))
         ) if !body.to_html.include?(Generator.machine_id(elem['id']))
       end
 
@@ -292,14 +280,9 @@ module Jekyll::Aplayer
       logger.log file
     end
 
-    def self.escape_html(content)
-      # escape link
-      content.scan(/((https?:)?\/\/\S+\?[a-zA-Z0-9%\-_=\.&;]+)/) do |result|
-        result = result[0]
-        link = result.gsub('&amp;', '&')
-        content = content.gsub(result, link)
-      end
-      content
+    def on_config_normalize(config)
+      # default handle method
+      config
     end
 
   end
